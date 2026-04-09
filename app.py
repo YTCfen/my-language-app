@@ -21,6 +21,3 @@ if st.button("開始多語轉換"):
             response = model.generate_content(prompt)
             st.success("轉換完成！")
             st.markdown(response.text)
-        except Exception as e:
-            st.error(f"呼叫 AI 發生錯誤：{e}")
-            st.info("請檢查 API Key 是否有效，或是否已達到免費額度上限。")
