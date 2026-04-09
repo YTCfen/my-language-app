@@ -8,7 +8,7 @@ my_key = "AIzaSyCGx2MX5Q1FT5fDluU_wevaT75-d6_xBpI"
 
 try:
     genai.configure(api_key=my_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-pro')
 except Exception as e:
     st.error(f"連線設定失敗：{e}")
 
