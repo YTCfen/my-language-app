@@ -1,26 +1,28 @@
 import streamlit as st
 import google.generativeai as genai
 
+# 1. 網頁標題
 st.title("🌍 我的多語練習機")
 
-# 這裡請務必確保引號存在
-my_key = "AIzaSyCGx2MX5Q1FT5fDluU_wevaT75-d6_xBpI"
+# 2. 設定你的鑰匙 (請確保引號內是你的 API Key)
+genai.configure(api_key="這裡換成你的API_KEY")
 
-try:
-    genai.configure(api_key=my_key)
-    model = genai.GenerativeModel('gemini-pro')
-except Exception as e:
-    st.error(f"連線設定失敗：{e}")
-
+# 3. 輸入框
 text = st.text_input("輸入中文句子：", "今天天氣很好")
 
+# 4. 按鈕觸發
 if st.button("開始多語轉換"):
-    with st.spinner('AI 正在思考中...'):
-        try:
-            prompt = f"請將『{text}』翻譯成日文、韓文、泰文。每一種語言請提供：1.原文 2.羅馬拼音 3.一句簡單的情境說明。請用 Markdown 格式清楚排列。"
-            response = model.generate_content(prompt)
-            st.success("轉換完成！")
-            st.markdown(response.text)
-except Exception as e:
-            st.error(f"呼叫 AI 發生錯誤：{e}")
-            st.info("請檢查 API Key 是否有效，或是否已達到免費額度上限。")
+    # 這裡我們換成最穩定的 gemini-pro 模型
+    model = genai.GenerativeModel('gemini-pro')
+    
+    # 使用 try...except 確保安全
+    try:
+        prompt = f"將『{text}』翻譯成日文、韓文、泰文。每種語言請提供：1.原文 2.羅馬拼音 3.一句簡單的情境說明。"
+        response = model.generate_content(prompt)
+        
+        # 顯示結果
+        st.success("完成！")
+        st.markdown(response.text)
+        
+    except Exception as e:
+        st.error(f"抱歉，連線出了點問題：{e}")
