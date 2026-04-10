@@ -4,7 +4,7 @@ import google.generativeai as genai
 st.title("⚡️ 最簡測試")
 
 # 請確保這串 Key 是正確的
-genai.configure(api_key="這裡換成你的API_KEY")
+genai.configure(api_key="AIzaSyCbE5dZScjtY37wSCpP3C-pZGJ_inWhkXE")
 
 if st.button("連線測試"):
     model = genai.GenerativeModel('gemini-1.5-flash')
