@@ -15,9 +15,10 @@ except:
 text = st.text_input("輸入中文句子：", "這多少錢？")
 
 if st.button("開始多語轉換"):
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    # 這裡改回最穩定的模型名稱
+    model = genai.GenerativeModel('gemini-pro')
     
-    # 三、調整指令：加入生詞與例句需求，並要求 HTML 格式
+    # 三、要求的 HTML 格式、生詞與例句
     prompt = f"""
     請將『{text}』翻譯成日文、韓文、泰文。
     請嚴格遵守以下格式輸出，不要有任何額外的前言或結語：
@@ -45,6 +46,7 @@ if st.button("開始多語轉換"):
             # 一、使用 HTML 渲染功能來顯示底色
             st.markdown(response.text, unsafe_allow_html=True)
         except Exception as e:
+            # 這裡如果還是 404，程式會自動顯示錯誤細節
             st.error(f"連線失敗：{e}")
 
 st.caption("✨ 每天練習一個句子，同時精通日韓泰！")
