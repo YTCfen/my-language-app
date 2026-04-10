@@ -18,7 +18,7 @@ if st.button("開始多語轉換"):
         try:
             # 使用最新且最快的 flash 模型
             st.write("正在組織翻譯內容...")
-            model = genai.GenerativeModel('gemini-1.5-pro')
+            model = genai.GenerativeModel('gemini-pro')
             
             prompt = f"將『{text}』翻譯成日文、韓文、泰文。每種語言請提供：1.原文 2.羅馬拼音 3.一句簡單的情境說明。"
             
