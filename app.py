@@ -4,7 +4,7 @@ import google.generativeai as genai
 st.title("🌍 多語練習機 - 自動偵錯版")
 
 # 1. 填入你的 Key
-API_KEY = "AIzaSyCbE5dZScjtY37wSCpP3C-pZGJ_inWhkXE"
+API_KEY = st.secrets["MY_API_KEY"]
 genai.configure(api_key=API_KEY.strip())
 
 # 2. 自動偵測可用的模型（這步最關鍵）
