@@ -16,7 +16,6 @@ text = st.text_input("輸入中文句子：", "這多少錢？")
 if st.button("開始多語轉換"):
     with st.spinner('正在分析中...'):
         try:
-            # 使用更嚴格的指令要求繁體中文
             chat_completion = client.chat.completions.create(
                 messages=[
                     {
@@ -25,33 +24,16 @@ if st.button("開始多語轉換"):
                     },
                     {
                         "role": "user",
-                        "content": f"""
-                        請將『{text}』翻譯成日文、韓文、泰文。
-                        
-                        嚴格遵守以下輸出規範：
-                        1. 全程使用「繁體中文」。
-                        2. 格式如下：
-                           ### [國旗] [語言名稱]
-                           <div style="background-color: #FFFF00; padding: 10px; border-radius: 5px; color: black; font-weight: bold; margin-bottom: 5px;">原文：[原文]</div>
-                           <div style="background-color: #E0E0E0; padding: 10px; border-radius: 5px; color: black; margin-bottom: 10px;">羅馬拼音：[拼音]</div>
-                           
-                           **💡 相關生詞：**
-                           * [單字] ([拼音]) - [繁體中文意思]
-                           
-                           **📝 其他例句：**
-                           1. [例句]
-                              - 拼音：[例句拼音]
-                              - 中譯：[繁體中譯]
-                        """
+                        "content": f"請將『{text}』翻譯成日文、韓文、泰文。依照指定的 HTML 格式與繁體中文輸出相關生詞與例句。"
                     }
                 ],
                 model="llama-3.3-70b-versatile",
-                temperature=0.3, # 降低隨機性，讓輸出更穩定
+                temperature=0.3,
             )
             
             st.success("✅ 翻譯成功（已強制繁體化）！")
-            st.markdown(chat_completion.choices.message.content, unsafe_allow_html=True)
+            # 關鍵修正點：choices[0]
+            st.markdown(chat_completion.choices[0].message.content, unsafe_allow_html=True)
             
         except Exception as e:
             st.error(f"連線失敗：{e}")
-
