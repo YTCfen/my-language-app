@@ -5,7 +5,7 @@ st.set_page_config(page_title="多語練習機", page_icon="🌍")
 st.title("🌍 我的多語練習機")
 
 # 這裡請貼上你的 API Key
-API_KEY = "AIzaSyCGx2MX5Q1FT5fDluU_wevaT75-d6_xBpI"
+API_KEY = "AIzaSyCbE5dZScjtY37wSCpP3C-pZGJ_inWhkXE"
 
 # 設定 API
 genai.configure(api_key=API_KEY)
