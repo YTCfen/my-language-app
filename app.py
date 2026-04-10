@@ -1,11 +1,9 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 二、修改網頁標題與名稱
 st.set_page_config(page_title="🔎多語練習機 🔊", page_icon="🌍")
 st.title("🔎多語練習機 🔊")
 
-# 讀取秘密鑰匙
 try:
     API_KEY = st.secrets["MY_API_KEY"]
     genai.configure(api_key=API_KEY.strip())
@@ -15,38 +13,39 @@ except:
 text = st.text_input("輸入中文句子：", "這多少錢？")
 
 if st.button("開始多語轉換"):
-    # 這裡改回最穩定的模型名稱
-    model = genai.GenerativeModel('gemini-pro')
+    # 嘗試不同的模型名稱清單
+    models_to_try = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+    response = None
     
-    # 三、要求的 HTML 格式、生詞與例句
-    prompt = f"""
-    請將『{text}』翻譯成日文、韓文、泰文。
-    請嚴格遵守以下格式輸出，不要有任何額外的前言或結語：
-    
-    ### [國旗] [語言名稱]
-    <div style="background-color: #FFFF00; padding: 10px; border-radius: 5px; color: black; font-weight: bold; margin-bottom: 5px;">原文：[原文]</div>
-    <div style="background-color: #E0E0E0; padding: 10px; border-radius: 5px; color: black; margin-bottom: 10px;">羅馬拼音：[拼音]</div>
-    
-    **💡 相關生詞：**
-    * [單字1] ([拼音]) - [中文意思]
-    * [單字2] ([拼音]) - [中文意思]
-    
-    **📝 其他例句：**
-    1. [例句1]
-       - 拼音：[例句1拼音]
-    2. [例句2]
-       - 拼音：[例句2拼音]
-    
-    ---
-    """
-    
-    with st.spinner('正在分析生詞與造句...'):
-        try:
-            response = model.generate_content(prompt)
-            # 一、使用 HTML 渲染功能來顯示底色
-            st.markdown(response.text, unsafe_allow_html=True)
-        except Exception as e:
-            # 這裡如果還是 404，程式會自動顯示錯誤細節
-            st.error(f"連線失敗：{e}")
+    with st.spinner('正在尋找可用模型並翻譯中...'):
+        for model_name in models_to_try:
+            try:
+                model = genai.GenerativeModel(model_name)
+                prompt = f"""
+                請將『{text}』翻譯成日文、韓文、泰文。
+                請嚴格遵守以下格式輸出：
+                
+                ### [國旗] [語言名稱]
+                <div style="background-color: #FFFF00; padding: 10px; border-radius: 5px; color: black; font-weight: bold; margin-bottom: 5px;">原文：[原文]</div>
+                <div style="background-color: #E0E0E0; padding: 10px; border-radius: 5px; color: black; margin-bottom: 10px;">羅馬拼音：[拼音]</div>
+                
+                **💡 相關生詞：**
+                * [單字1] ([拼音]) - [中文意思]
+                
+                **📝 其他例句：**
+                1. [例句1] (拼音)
+                
+                ---
+                """
+                response = model.generate_content(prompt)
+                if response:
+                    st.success(f"成功連線 (模型: {model_name})")
+                    st.markdown(response.text, unsafe_allow_html=True)
+                    break
+            except:
+                continue
+        
+        if not response:
+            st.error("所有模型連線均失敗。這通常代表您的 API Key 尚未開通 Gemini API 權限，請至 Google AI Studio 確認該 Key 是否已啟用。")
 
 st.caption("✨ 每天練習一個句子，同時精通日韓泰！")
